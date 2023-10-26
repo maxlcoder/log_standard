@@ -46,7 +46,8 @@ abstract class Log
      */
     protected function getUserInfo()
     {
-        $this->user = $_SERVER['log_user_info'] ?? [];
+        $token = request()->bearerToken();
+        $this->user = $_SERVER['log_user_info'] ?? json_decode(Cache::get('log_' . $token, '{}'), 1);
     }
 
     /**
@@ -143,7 +144,6 @@ abstract class Log
         return 0;
     }
 
-
     /**
      * 操作时间
      * 用户操作发生时间，精确到秒，字段标准格式为：yyyy-MM-ddHH:mm:ss
@@ -163,7 +163,6 @@ abstract class Log
     {
         return floor((microtime(true) - LARAVEL_START) * 1000);
     }
-
 
     /**
      * 操作状态
@@ -219,5 +218,11 @@ abstract class Log
             storage_path('logs/01_' . $this->index->appCode . '_log'),
             json_encode($this->index, JSON_UNESCAPED_UNICODE)
         );
+    }
+
+    public function cacheUser($token, $data = [])
+    {
+        Cache::put('log_' . $token, json_encode($data), 24 * 3600 * 10);
+        $_SERVER['log_user_info'] = $data;
     }
 }
