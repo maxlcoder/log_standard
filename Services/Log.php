@@ -179,10 +179,10 @@ abstract class Log
             $content = json_decode($response->getContent(), 1);
             $code = $content['code'] ?? -1;
             if ($code == 0 || $code == 200) {
-                return 'success';
+                return 0;
             }
         }
-        return 'error';
+        return 1;
     }
 
     /**
