@@ -201,7 +201,7 @@ abstract class Log
         $this->index->appCode = $this->getAppCode();
         $this->index->activeRate = '100%';
         $this->index->businessData = 0;
-        $this->index->ext = '{}';
+        $this->index->ext = [];
     }
 
     public function save()
